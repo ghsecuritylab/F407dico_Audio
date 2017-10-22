@@ -1,160 +1,74 @@
-/**
-  ******************************************************************************
-  * @file    Audio/Audio_playback_and_record/Src/main.c 
-  * @author  MCD Application Team
-  * @version V1.3.5
-  * @date    17-February-2017
-  * @brief   Main program body.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics International N.V. 
-  * All rights reserved.</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without 
-  * modification, are permitted, provided that the following conditions are met:
-  *
-  * 1. Redistribution of source code must retain the above copyright notice, 
-  *    this list of conditions and the following disclaimer.
-  * 2. Redistributions in binary form must reproduce the above copyright notice,
-  *    this list of conditions and the following disclaimer in the documentation
-  *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
-  *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
-  *    software, must execute solely and exclusively on microcontroller or
-  *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
-  *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
-  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */ 
-
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef hTimLed;
 TIM_OC_InitTypeDef sConfigLed;
 
-/* Counter for User button presses. Defined as external in waveplayer.c file */
 __IO uint32_t PressCount = 0;
 
-/* Wave Player Pause/Resume Status. Defined as external in waveplayer.c file */
 __IO uint32_t PauseResumeStatus = IDLE_STATUS;   
                                                    
 extern uint32_t AudioPlayStart;
 
-/* Re-play Wave file status on/off.
-   Defined as external in waveplayer.c file */
 __IO uint32_t RepeatState = REPEAT_ON;
 
-/* Capture Compare Register Value.
-   Defined as external in stm32f4xx_it.c file */
 __IO uint16_t CCR1Val = 16826;              
                                             
 extern __IO uint32_t LEDsState;
 
-/* Save MEMS ID */
 uint8_t MemsID = 0; 
 
 __IO uint32_t CmdIndex = CMD_PLAY;
 __IO uint32_t PbPressCheck = 0;
 
-FATFS USBDISKFatFs;          /* File system object for USB disk logical drive */
-char USBDISKPath[4];         /* USB Host logical drive path */
-USBH_HandleTypeDef hUSBHost; /* USB Host handle */
+FATFS USBDISKFatFs;
+char USBDISKPath[4];
+USBH_HandleTypeDef hUSBHost;
 
 MSC_ApplicationTypeDef AppliState = APPLICATION_IDLE;
 static uint8_t  USBH_USR_ApplicationState = USBH_USR_FS_INIT;
 
-/* Private function prototypes -----------------------------------------------*/
 static void TIM_LED_Config(void);
 static void SystemClock_Config(void);
 static void USBH_UserProcess(USBH_HandleTypeDef *pHost, uint8_t vId);
 static void MSC_Application(void);
 static void COMMAND_AudioExecuteApplication(void);
 
-/* Private functions ---------------------------------------------------------*/
-
-/**
-  * @brief  Main program
-  * @param  None
-  * @retval None
-  */
 int main(void)
 {
-  /* STM32F4xx HAL library initialization:
-     - Configure the Flash prefetch, instruction and Data caches
-     - Configure the Systick to generate an interrupt each 1 msec
-     - Set NVIC Group Priority to 4
-     - Global MSP (MCU Support Package) initialization
-  */
   HAL_Init();
   
-  /* Configure LED3, LED4, LED5 and LED6 */
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
   BSP_LED_Init(LED5);
   BSP_LED_Init(LED6);
   
-  /* Configure the system clock to 168 MHz */
   SystemClock_Config();
   
-  /* Initialize MEMS Accelerometer mounted on STM32F4-Discovery board */
   if(BSP_ACCELERO_Init() != ACCELERO_OK)
   {
-    /* Initialization Error */
     Error_Handler();
   }
   
   MemsID = BSP_ACCELERO_ReadID();
   
-  /* Turn ON LED4: start of application */
   BSP_LED_On(LED4);
   
-  /* Configure TIM4 Peripheral to manage LEDs lighting */
   TIM_LED_Config();
   
-  /* Initialize the Repeat state */
   RepeatState = REPEAT_ON;
   
-  /* Turn OFF all LEDs */
   LEDsState = LEDS_OFF;
   
-  /* Configure USER Button */
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
   
-  /*##-1- Link the USB Host disk I/O driver ##################################*/
   if(FATFS_LinkDriver(&USBH_Driver, USBDISKPath) == 0)
   { 
-    /*##-2- Init Host Library ################################################*/
     USBH_Init(&hUSBHost, USBH_UserProcess, 0);
     
-    /*##-3- Add Supported Class ##############################################*/
     USBH_RegisterClass(&hUSBHost, USBH_MSC_CLASS);
     
-    /*##-4- Start Host Process ###############################################*/
     USBH_Start(&hUSBHost);
     
-    /* Run Application (Blocking mode)*/
     while (1)
     {
       switch(AppliState)
@@ -178,12 +92,6 @@ int main(void)
   }
 }
 
-/**
-  * @brief  User Process
-  * @param  phost: Host Handle
-  * @param  id: Host Library user message ID
-  * @retval None
-  */
 static void USBH_UserProcess (USBH_HandleTypeDef *pHost, uint8_t vId)
 {  
   switch (vId)
@@ -209,11 +117,6 @@ static void USBH_UserProcess (USBH_HandleTypeDef *pHost, uint8_t vId)
   }
 }
 
-/**
-  * @brief  Main routine for Mass storage application
-  * @param  None
-  * @retval None
-  */
 static void MSC_Application(void)
 {
   switch (USBH_USR_ApplicationState)
@@ -243,11 +146,6 @@ static void MSC_Application(void)
   }
 }
 
-/**
-  * @brief  COMMAND_AudioExecuteApplication.
-  * @param  None
-  * @retval None
-  */
 static void COMMAND_AudioExecuteApplication(void)
 {
   /* Execute the command switch the command index */
@@ -404,11 +302,7 @@ static void TIM_LED_Config(void)
   }
 }
 
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @param  None
-  * @retval None
-  */
+/* This function is executed in case of error occurrence. */
 void Error_Handler(void)
 {
   /* Turn LED3 on */
@@ -534,27 +428,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 #ifdef USE_FULL_ASSERT
 
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
 void assert_failed(uint8_t* file, uint32_t line)
 { 
   /* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+  while (1) { }
 }
 #endif
-
-/**
-  * @}
-  */ 
   
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

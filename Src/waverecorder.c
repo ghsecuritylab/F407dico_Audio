@@ -1,74 +1,19 @@
-/**
-  ******************************************************************************
-  * @file    Audio/Audio_playback_and_record/Src/waverecorder.c 
-  * @author  MCD Application Team
-  * @version V1.3.5
-  * @date    17-February-2017
-  * @brief   I2S Audio recorder program.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics International N.V. 
-  * All rights reserved.</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without 
-  * modification, are permitted, provided that the following conditions are met:
-  *
-  * 1. Redistribution of source code must retain the above copyright notice, 
-  *    this list of conditions and the following disclaimer.
-  * 2. Redistributions in binary form must reproduce the above copyright notice,
-  *    this list of conditions and the following disclaimer in the documentation
-  *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
-  *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
-  *    software, must execute solely and exclusively on microcontroller or
-  *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
-  *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
-  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */   
-
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "waverecorder.h" 
 #include "string.h"
 #include "pdm_filter.h"
 
-/* Private typedef -----------------------------------------------------------*/
 typedef struct {
   int32_t offset;
   uint32_t fptr;
 }Audio_BufferTypeDef;
 
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Wave recorded counter.*/
 __IO uint32_t WaveCounter = 0;
 
 extern __IO uint32_t CmdIndex, LEDsState, TimeRecBase;
 
-/* USB variable to check if USB connected or not */
 extern MSC_ApplicationTypeDef AppliState;
 
-/* Variable used to switch play from audio sample available on USB to recorded file */
 uint32_t WaveRecStatus = 0; 
 
 uint8_t pHeaderBuff[44];
@@ -85,8 +30,6 @@ __IO uint32_t AUDIODataReady = 0, AUDIOBuffOffset = 0;
 WAVE_FormatTypeDef WaveFormat;
 FIL WavFile;
 
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
 static uint32_t WavProcess_EncInit(uint32_t Freq, uint8_t *pHeader);
 static uint32_t WavProcess_HeaderInit(uint8_t *pHeader, WAVE_FormatTypeDef *pWaveFormatStruct);
 static uint32_t WavProcess_HeaderUpdate(uint8_t *pHeader, WAVE_FormatTypeDef *pWaveFormatStruct);
@@ -113,33 +56,16 @@ static uint32_t WavProcess_HeaderUpdate(uint8_t *pHeader, WAVE_FormatTypeDef *pW
   "libPDMFilter_CM4_IAR.a".
 */
 
-
-/**
-  * @brief  Start Audio recording.
-  * @param  pBuf: pointer to a buffer
-  *         wSize: Buffer size
-  * @retval None
-  */
 uint8_t WaveRecorderStart(uint16_t* pBuf, uint32_t wSize)
 {
   return (BSP_AUDIO_IN_Record(pBuf, wSize));
 }
 
-/**
-  * @brief  Stop Audio recording.
-  * @param  None
-  * @retval None
-  */
 uint32_t WaveRecorderStop(void)
 {
   return BSP_AUDIO_IN_Stop();
 }
 
-/**
-  * @brief  Update the recorded data. 
-  * @param  None
-  * @retval None
-  */
 void WaveRecorderProcess(void)
 {     
   /* Current size of the recorded buffer */
@@ -356,13 +282,11 @@ static uint32_t WavProcess_HeaderInit(uint8_t* pHeader, WAVE_FormatTypeDef* pWav
   pHeader[6] = 0x1D;
   pHeader[7] = 0x00;
   
-  /* Write the file format, must be 'WAVE' -----------------------------------*/
   pHeader[8]  = 'W';
   pHeader[9]  = 'A';
   pHeader[10] = 'V';
   pHeader[11] = 'E';
   
-  /* Write the format chunk, must be'fmt ' -----------------------------------*/
   pHeader[12]  = 'f';
   pHeader[13]  = 'm';
   pHeader[14]  = 't';
@@ -446,4 +370,3 @@ static uint32_t WavProcess_HeaderUpdate(uint8_t* pHeader, WAVE_FormatTypeDef* pW
   return 0;
 }
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
