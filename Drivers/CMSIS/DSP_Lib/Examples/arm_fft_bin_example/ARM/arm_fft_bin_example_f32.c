@@ -23,13 +23,13 @@
  * FFTBinOutput.gif "Input signal in Frequency domain"
  *
  * Variables Description:
- * \li \c testInput_f32_10khz points to the input data
- * \li \c testOutput points to the output data
- * \li \c fftSize length of FFT
- * \li \c ifftFlag flag for the selection of CFFT/CIFFT
- * \li \c doBitReverse Flag for selection of normal order or bit reversed order
- * \li \c refIndex reference index value at which maximum energy of bin ocuurs
- * \li \c testIndex calculated index value at which maximum energy of bin ocuurs
+ * testInput_f32_10khz points to the input data
+ * testOutput points to the output data
+ * fftSize length of FFT
+ * ifftFlag flag for the selection of CFFT/CIFFT
+ * doBitReverse Flag for selection of normal order or bit reversed order
+ * refIndex reference index value at which maximum energy of bin ocuurs
+ * testIndex calculated index value at which maximum energy of bin ocuurs
  *
  * CMSIS DSP Software Library Functions Used:
  * - arm_cfft_f32()
@@ -52,9 +52,7 @@ uint32_t doBitReverse = 1;
 /* Reference index at which max energy of bin ocuurs */
 uint32_t refIndex = 213, testIndex = 0;
 
-/*
- * Max magnitude FFT Bin test
- */
+/* Max magnitude FFT Bin test */
 
 int32_t main(void)
 {
