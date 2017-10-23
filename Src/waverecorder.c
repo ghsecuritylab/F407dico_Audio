@@ -52,8 +52,7 @@ static uint32_t WavProcess_HeaderUpdate(uint8_t *pHeader, WAVE_FormatTypeDef *pW
     order must be respected when managing other interrupts; 
 
   Note that a PDM Audio software decoding library provided in binary is used in 
-  this application. For IAR EWARM toolchain, the library is labeled 
-  "libPDMFilter_CM4_IAR.a".
+  this application. 
 */
 
 uint8_t WaveRecorderStart(uint16_t* pBuf, uint32_t wSize)
