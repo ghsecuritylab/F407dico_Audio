@@ -3,7 +3,7 @@
  * Auto generated Run-Time-Environment Component Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'fft' 
+ * Project: 'audio' 
  * Target:  'STM32F4-DISCO' 
  */
 
