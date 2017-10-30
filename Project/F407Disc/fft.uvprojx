@@ -137,7 +137,7 @@
             <DriverSelection>4107</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
-          <Flash2>STLink\ST-LINKIII-KEIL_SWO.dll</Flash2>
+          <Flash2>BIN\UL2CM3.DLL</Flash2>
           <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
@@ -388,87 +388,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Middlewares/FatFs/Core</GroupName>
-          <Files>
-            <File>
-              <FileName>diskio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\Third_Party\FatFs\src\diskio.c</FilePath>
-            </File>
-            <File>
-              <FileName>ff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\Third_Party\FatFs\src\ff.c</FilePath>
-            </File>
-            <File>
-              <FileName>ff_gen_drv.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\Third_Party\FatFs\src\ff_gen_drv.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/STM32_USBH_Library/Class/MSC</GroupName>
-          <Files>
-            <File>
-              <FileName>usbh_msc_scsi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Class\MSC\Src\usbh_msc_scsi.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbh_msc_bot.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Class\MSC\Src\usbh_msc_bot.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbh_msc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Class\MSC\Src\usbh_msc.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Doc</GroupName>
-          <Files>
-            <File>
-              <FileName>readme.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\readme.txt</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Drivers/CMSIS</GroupName>
           <Files>
             <File>
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\src\system_stm32f4xx.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/STM32_USBH_Library/Core</GroupName>
-          <Files>
-            <File>
-              <FileName>usbh_pipes.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Core\Src\usbh_pipes.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbh_core.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Core\Src\usbh_core.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbh_ctlreq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Core\Src\usbh_ctlreq.c</FilePath>
-            </File>
-            <File>
-              <FileName>usbh_ioreq.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_USB_HOST_Library\Core\Src\usbh_ioreq.c</FilePath>
+              <FilePath>src\system_stm32f4xx.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -489,31 +414,6 @@
               <FileName>lis302dl.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\Components\lis302dl\lis302dl.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/FatFs/Options</GroupName>
-          <Files>
-            <File>
-              <FileName>syscall.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\Third_Party\FatFs\src\option\syscall.c</FilePath>
-            </File>
-            <File>
-              <FileName>unicode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\Third_Party\FatFs\src\option\unicode.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/PDM</GroupName>
-          <Files>
-            <File>
-              <FileName>libPDMFilter_CM4_keil.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\Middlewares\ST\STM32_Audio\Addons\PDM\libPDMFilter_CM4_keil.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -644,16 +544,6 @@
               <FileName>stm32f4_discovery_audio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Drivers\BSP\STM32F4-Discovery\stm32f4_discovery_audio.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/FatFs/Drivers</GroupName>
-          <Files>
-            <File>
-              <FileName>usbh_diskio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\Middlewares\Third_Party\FatFs\src\drivers\usbh_diskio.c</FilePath>
             </File>
           </Files>
         </Group>
